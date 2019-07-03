@@ -17,25 +17,27 @@ class Raw_data:
         
         with open(file_path,"r") as f:
             line = f.readline()
+            pointer = 1
 
-            # get courses
-            headers = line.split(",")
-            for course in headers:
-                if (course != ""):
-                    self.__courses.append(course)
-
-            # get studetns and grades.
-            while line :
-                line = f.readline()
-
+            while line != "":
                 #remove \r\n
                 line = line.strip("\r\n")
-                row = line.split(",")
-                    
-                self.__students.append(row[0])
-                self.__grades.append(row[1:])
-                self.__student2Courses[row[0]] = row[1:]
-        
+                
+                # get courses
+                if (pointer == 1):
+                    headers = line.split(",")
+                    for course in headers:
+                        if (course != ""):
+                            self.__courses.append(course)
+                else :   # get studetns and grades.
+                    row = line.split(",")
+                    self.__students.append(row[0])
+                    self.__grades.append(row[1:])
+                    self.__student2Courses[row[0]] = row[1:]
+
+                line = f.readline()
+                pointer += 1
+
         f.close()
 
     
