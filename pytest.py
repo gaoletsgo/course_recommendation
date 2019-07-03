@@ -1,7 +1,13 @@
-dic = {}
+import numpy as np 
+import matplotlib.pyplot as pt 
 
-dic["1"] = "1"
-dic["2"] = "2"
-dic["3"] = "3"
+a = np.array([1,1,1,1,1,1])
+b = np.array([2,2,2,2,2,2])
+c = np.array([3,3,3,3,3,3])
 
-print(dic.keys())
+print(a.dtype)
+
+# print(a.transpose())
+
+pt.quiver(a,b,c)
+pt.show()

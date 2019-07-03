@@ -1,35 +1,25 @@
 import numpy as np
 
-courses = []
-students = []
-grades = []
-
-with open("dataset/UQDataset_5_5639.csv", "r") as f:
-    line = f.readline()
-
-    # get courses
-    headers = line.split(",")
-    for course in headers:
-        if (course != ""):
-            courses.append(course)
-
-    # get students and gardes
-    while line != "":
-    
-        line = f.readline()
-        row = line.split(",")
-        
-        students.append(row[0])
-        grades.append(row[1:])
-
-f.close()
+np.set_printoptions(threshold=np.inf, linewidth=1000)
 
 
-# remove '\r\n'
-for grade in grades:
-    last_index = len(grade)-1
-    grade[last_index] = grade[last_index].strip("\r\n")
-    
-matrix = np.array(grades)
+path = "dataset/UQDataset_5_5639.csv"
 
-# print(matrix)
+data = np.genfromtxt(path, delimiter=",",dtype=None)
+
+courses = np.array([data[0][1:]])
+
+students = np.array([[row[0] for row in data[1:]]])
+
+
+grades = np.array([row[1:] for row in data[1:]])
+grades[grades == ""] = 0
+
+print(courses)
+print(np.transpose(students))
+# print(grades)
+
+print(type(grades[0][0]))   
+print(grades[0][0] )
+
+students
