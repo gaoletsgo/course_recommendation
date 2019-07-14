@@ -56,22 +56,22 @@ class Raw_data:
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    np.set_printoptions(threshold=np.inf, linewidth=1800)
-    data = Raw_data("dataset/UQDataset_5_5639.csv")
-    students = data.get_students()
-    courses = data.get_courses()
-    grades = data.get_grades()
+#     np.set_printoptions(threshold=np.inf, linewidth=1800)
+#     data = Raw_data("dataset/UQDataset_5_5639.csv")
+#     students = data.get_students()
+#     courses = data.get_courses()
+#     grades = data.get_grades()
 
-    s2C = data.get_student2Courses()
+#     s2C = data.get_student2Courses()
     
-    np.savetxt("grades.csv", delimiter= ",", header="course")
+#     np.savetxt("grades.csv", delimiter= ",", header="course")
     
 
-    # print(grades[1:10])
-    print(courses)
-    print(s2C.get("s0000001"))
+#     # print(grades[1:10])
+#     print(courses)
+#     print(s2C.get("s0000001"))
 
 
 
