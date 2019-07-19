@@ -1,17 +1,7 @@
-import numpy as np 
-import matplotlib.pyplot as pt 
 
-a = np.array(["1","","1","","1","1"])
-b = np.array([2,2,2,2,2,2])
-c = np.array([3,3,3,3,3,3])
-d = [[]]
-print(a)
+a=[1,2,3,4]
 
-d[1][1] = 1
+file = open("result.txt", "w")
 
-print(d)
-
-
-
-
-
+file.write(str(a))
+file.close()
