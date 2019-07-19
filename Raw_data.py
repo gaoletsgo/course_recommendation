@@ -31,7 +31,7 @@ class Raw_data:
                             self.__courses.append(course)
                 else :   # get studetns and grades.
                     row = line.split(",")
-                    self.__students.append(row[0])
+                    self.__students.append(row)
                     self.__grades.append(row[1:])
                     self.__student2Courses[row[0]] = row[1:]
 
@@ -48,30 +48,15 @@ class Raw_data:
         return self.__students
 
     def get_grades(self):
-        return np.array(self.__grades)
+        #convert string to int64
+        grades = np.array(self.__grades)
+        grades[grades == ""] = 0
+        return grades.astype(np.int64)
 
     def get_student2Courses(self):
         return self.__student2Courses
 
 
-
-
-# if __name__ == "__main__":
-
-#     np.set_printoptions(threshold=np.inf, linewidth=1800)
-#     data = Raw_data("dataset/UQDataset_5_5639.csv")
-#     students = data.get_students()
-#     courses = data.get_courses()
-#     grades = data.get_grades()
-
-#     s2C = data.get_student2Courses()
-    
-#     np.savetxt("grades.csv", delimiter= ",", header="course")
-    
-
-#     # print(grades[1:10])
-#     print(courses)
-#     print(s2C.get("s0000001"))
 
 
 

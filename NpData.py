@@ -38,14 +38,21 @@ if __name__ == "__main__":
 
     c2S = npdata.get_C2Sgrades()
 
+    # s1 = s2Cgrades[0]
+    # s2 = s2Cgrades[1]
+    # print(s1)
+    # print(s2)
+    # print(np.equal(s1,s2).all())
 
     distance = []
 
-    for s in s2Cgrades:
-        for s2 in s2Cgrades:
+    zero = np.zeros(108)
 
-            if(s.all() != s2.all()):
-                distance.append(np.linalg.norm(s,s2))
+    for s in s2Cgrades:
     
+        distance.append(np.linalg.norm(s-zero))
+    # print(zero)
+
+    distance.sort()
     print(distance)
 
