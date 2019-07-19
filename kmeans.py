@@ -93,7 +93,7 @@ def KMmeans(data):
             file.write("times: "+str(times)+"\n")
             file.write(str(lenth)+"\n")
             sse = _getSSE(clusters, centeroids)
-            file.write("sse: "+sse+"")
+            file.write("sse: "+str(sse)+"")
 
             print("write")
 
