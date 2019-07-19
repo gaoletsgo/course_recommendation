@@ -50,7 +50,7 @@ def KMmeans(data):
     # k = 4
     for k in range(4, 40):
 
-        for times in range(10):
+        for times in range(3):
 
     
             centeroids = _initCenteroid(k)
