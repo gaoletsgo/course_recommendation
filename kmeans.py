@@ -1,5 +1,6 @@
 from Data import *
 import numpy as np  
+from matplotlib import pyplot as plt 
 
 class KMeans:
 
@@ -28,11 +29,11 @@ class KMeans:
         dist = np.sqrt(np.square(trainset - centeroids[:, np.newaxis]).sum(axis=2))
         return np.argmin(dist, axis=0)
     
-    def clustering(self, closest_index, trainset):
+    def clustering(self, k, closest_index, trainset):
         clusters = list()
-        [clusters.append(list()) for length in range(4)]
+        [clusters.append(list()) for length in range(k)]
 
-        for index in range(4):
+        for index in range(k):
             clusters[index] = trainset[closest_index == index]
         return clusters
     
@@ -48,11 +49,26 @@ class KMeans:
 
     def get_SSE(self, clusters, centeroids):
         SSE = []
-        for index in range(4):
+        for index in range(len(centeroids)):
             int_grade = self.get_int_grade(clusters[index])
             distence = np.sqrt(np.square(int_grade - centeroids[index]).sum(axis=1))
             SSE.append(distence.sum(axis = 0))
         return np.array(SSE)
+
+    def determine_K(self, dataset):
+        sse = []
+        for k_value in range(2,15):
+            clusters = self.fit(k_value, trainset)
+            centeroids = self.change_centeroids(clusters)
+            # s = self.get_SSE(clusters, centeroids)
+            sse.append(self.get_SSE(clusters, centeroids).sum(axis=0))
+        x = range(2,15)
+        y = sse
+        plt.plot(x,y)
+        plt.show()
+        # diff = np.diff(np.array(sse))
+        # return diff
+
 
     def fit(self, k, trainset):
         
@@ -63,14 +79,15 @@ class KMeans:
         while centeroid_change:
             centeroid_change = False
             closest_index = self.get_closest_index(int_trainset, centeroids)
-            clusters = self.clustering(closest_index, trainset) # string traiset
+            clusters = self.clustering(k, closest_index, trainset) # string traiset
             new_centeroids = self.change_centeroids(clusters)
 
             if (new_centeroids != centeroids).any():
                 centeroid_change = True
                 centeroids = new_centeroids
 
-        print([len(cluster) for cluster in clusters])
+        # print([len(cluster) for cluster in clusters])
+        return clusters
 
 
 
@@ -87,4 +104,6 @@ if __name__ == "__main__":
     data = Data("dataset/UQDataset_5_5639.csv")
     trainset = data.get_s2c_trainset()
     kmeans = KMeans()
-    kmeans.fit(4,trainset)
+    # kmeans.fit(4,trainset)
+    # print(kmeans.determine_K(trainset))
+    kmeans.determine_K(trainset)
