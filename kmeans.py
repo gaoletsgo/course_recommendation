@@ -1,119 +1,90 @@
-"""
-K-menas
-"""
+from Data import *
+import numpy as np  
 
-from Raw_data import *
-import numpy as np 
+class KMeans:
 
-def initCenteroid(k, gpa=8, courseNum=108):
-    return np.random.randint(gpa, size=(k, courseNum))
+    # # data = Data("dataset/UQDataset_5_5639.csv")
 
-def KMmeans(data):
+    # def __init__(self, filepath):
+    #     data = Data(filepath)
+    #     self.__s2c_trainset = data.get_s2c_trainset()
+    #     self.__c2s_trainset = data.get_c2s_trainset()
 
-    def _initCenteroid(k, gpa=8, courseNum=108):
-        return np.random.randint(gpa, size=(k, courseNum))
+    # # random points in the range.
+    # def _init_centeroid(self, k, gpa=8, courseNum=108):
+    #     return np.random.randint(gpa, size=(k, courseNum))  
 
-    def _getIntGrade(studentRow):
-        strGrade = np.array(studentRow[1:])
-        strGrade[strGrade==""] = 0 # replace no grade to 0.
+    def init_centeroids(self, k, int_trainset):
+        centeroids = int_trainset.copy()
+        np.random.shuffle(centeroids)
+        return centeroids[:k]
+
+    def get_int_grade(self, str_trainset):
+        strGrade = str_trainset[...,1:]
+        strGrade[strGrade==""] = "0"
         return strGrade.astype(np.int64)
-
-    def _changeCenteroids(clusters):
-        newCenteroids=np.zeros((k,108), dtype=np.int64)
-        for cluster, i in zip(clusters, range(k)):
-            grades = [_getIntGrade(student) for student in cluster]
-            newCenteroids[i] = _getMean(grades)
-        
-        return newCenteroids
-            
-    def _getMean(listOfGrade):
-        sum = np.zeros(108, dtype=np.int64) 
-        for grade in listOfGrade:
-            sum += grade
-        
-        return sum/len(listOfGrade)
-
-    def _getSSE(clusters, centeroids):
-        sum = float(0)
-        for cluster,centeroid in zip(clusters,centeroids):
-            grades = [_getIntGrade(student) for student in cluster]
-            for grade in grades:
-                sum += np.square(np.linalg.norm(grade - centeroid))
-
-        return sum
-
-
-
-    students = data.get_students()
-     
-    file = open("result.txt", "w")
-    # k = 4
-    for k in range(4, 40):
-
-        for times in range(3):
-
     
-            centeroids = _initCenteroid(k)
-            # print("init centeroid: ", centeroids)
+    def get_closest_index(self, trainset, centeroids):
+        dist = np.sqrt(np.square(trainset - centeroids[:, np.newaxis]).sum(axis=2))
+        return np.argmin(dist, axis=0)
+    
+    def clustering(self, closest_index, trainset):
+        clusters = list()
+        [clusters.append(list()) for length in range(4)]
+
+        for index in range(4):
+            clusters[index] = trainset[closest_index == index]
+        return clusters
+    
+    def get_mean(self, cluster):
+        return cluster.mean(axis=0)
+
+    def change_centeroids(self, clusters):
+        new_centeroids = []
+        for cluster in clusters:
+            int_grade = self.get_int_grade(cluster)
+            new_centeroids.append(self.get_mean(int_grade))
+        return np.array(new_centeroids)
+
+    def get_SSE(self, clusters, centeroids):
+        SSE = []
+        for index in range(4):
+            int_grade = self.get_int_grade(clusters[index])
+            distence = np.sqrt(np.square(int_grade - centeroids[index]).sum(axis=1))
+            SSE.append(distence.sum(axis = 0))
+        return np.array(SSE)
+
+    def fit(self, k, trainset):
+        
+        int_trainset = self.get_int_grade(trainset)
+        centeroids = self.init_centeroids(k, int_trainset)
+
+        centeroid_change = True
+        while centeroid_change:
+            centeroid_change = False
+            closest_index = self.get_closest_index(int_trainset, centeroids)
+            clusters = self.clustering(closest_index, trainset) # string traiset
+            new_centeroids = self.change_centeroids(clusters)
+
+            if (new_centeroids != centeroids).any():
+                centeroid_change = True
+                centeroids = new_centeroids
+
+        print([len(cluster) for cluster in clusters])
 
 
-            clusters = list()
-            [clusters.append(list()) for lenth in range(k)]
-            # print("init clusters:", clusters)
-
-            clusterChange = True
-            while clusterChange:
-                clusterChange = False
-
-                clusters = list()
-                [clusters.append(list()) for lenth in range(k)]
-
-                for s2cGrade in students:
-                    grade = _getIntGrade(s2cGrade)
-
-                    minDist, minIndex = np.inf, -1
-
-                    for centeroid, i in zip(centeroids, range(k)):
-
-                        dist = np.linalg.norm(grade - centeroid)
-
-                        if dist < minDist:
-                            minDist, minIndex = dist, i
-
-                    clusters[minIndex].append(s2cGrade)
-                    # print([len(s) for s in clusters])
-
-                if not (centeroids == _changeCenteroids(clusters)).all():
-                    clusterChange = True
-                    centeroids = _changeCenteroids(clusters)
-                # print("new centeroids:", centeroids)
-
-            lenth = [len(s) for s in clusters]
-           
-            file.write("times: "+str(times)+"\n")
-            file.write(str(lenth)+"\n")
-            sse = _getSSE(clusters, centeroids)
-            file.write("sse: "+str(sse)+"")
-
-            print("write")
-
-            # print ("times: ",times)
-            # print([len(s) for s in clusters])
-
-            # sse = _getSSE(clusters, centeroids)
-            # print("sse: ", sse)
 
 
-    file.close()
-
+   
+    #     clusters = list()
+    #     [clusters.append(list()) for length in range(k)]
 
 
 
 
 if __name__ == "__main__":
 
-    data = Raw_data("dataset/UQDataset_5_5639.csv")
-
-    initcenteroid = initCenteroid(4)
-
-    KMmeans(data)
+    data = Data("dataset/UQDataset_5_5639.csv")
+    trainset = data.get_s2c_trainset()
+    kmeans = KMeans()
+    kmeans.fit(4,trainset)

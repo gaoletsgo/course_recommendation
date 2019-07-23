@@ -9,8 +9,8 @@ class Raw_data:
     __students = []
     __grades = []
 
-    __student2Courses = {}
-    __course2Students = {}
+    __student2Courses = []
+    __course2Students = []
 
     def __init__(self, file_path):
 
@@ -31,34 +31,39 @@ class Raw_data:
                             self.__courses.append(course)
                 else :   # get studetns and grades.
                     row = line.split(",")
-                    self.__students.append(row)
-                    self.__grades.append(row[1:])
-                    self.__student2Courses[row[0]] = row[1:]
+                    self.__students.append(row[0])
+
+                    self.__student2Courses.append(row)
+                    #Todo: get course2sudents.
 
                 line = f.readline()
                 pointer += 1
 
         f.close()
 
-    
+
     def get_courses(self):
-        return self.__courses
+        return np.array(self.__courses, dtype=np.str)
     
     def get_students(self):
-        return self.__students
+        return np.array(self.__students, dtype=np.str)
 
-    def get_grades(self):
-        #convert string to int64
-        grades = np.array(self.__grades)
-        grades[grades == ""] = 0
-        return grades.astype(np.int64)
-
-    def get_student2Courses(self):
+    def get_all_student2Courses(self):
         return self.__student2Courses
 
+    # def get_s2c_trainSet(self):
+
+    #Todo
+    def get_course2Student(self):
+        return 0
 
 
+if __name__ == "__main__":
 
+    data = Raw_data("dataset/UQDataset_5_5639.csv")
 
+    print("students: {0}".format(data.get_students()))
+    print("courses: {0})".format(data.get_courses()))
+    print("s2c: {0}".format(data.get_all_student2Courses()))
 
 
