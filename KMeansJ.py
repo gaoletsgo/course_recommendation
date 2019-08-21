@@ -2,7 +2,7 @@ from Data import *
 import numpy as np  
 from matplotlib import pyplot as plt 
 
-class KMeans:
+class KMeansJ:
 
     # # data = Data("dataset/UQDataset_5_5639.csv")
 
@@ -57,12 +57,12 @@ class KMeans:
 
     def determine_K(self, dataset):
         sse = []
-        for k_value in range(2,15):
-            clusters = self.fit(k_value, trainset)
+        for k_value in range(2,50):
+            clusters = self.fit(k_value, dataset)
             centeroids = self.change_centeroids(clusters)
             # s = self.get_SSE(clusters, centeroids)
             sse.append(self.get_SSE(clusters, centeroids).sum(axis=0))
-        x = range(2,15)
+        x = range(2,50)
         y = sse
         plt.plot(x,y)
         plt.show()
@@ -99,11 +99,11 @@ class KMeans:
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    data = Data("dataset/UQDataset_5_5639.csv")
-    trainset = data.get_s2c_trainset()
-    kmeans = KMeans()
-    # kmeans.fit(4,trainset)
-    # print(kmeans.determine_K(trainset))
-    kmeans.determine_K(trainset)
+#     data = Data("dataset/UQDataset_5_5639.csv")
+#     trainset = data.get_c2s_trainset()
+#     kmeans = KMeans()
+#     # kmeans.fit(4,trainset)
+#     # print(kmeans.determine_K(trainset))
+#     kmeans.determine_K(trainset)
