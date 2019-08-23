@@ -3,7 +3,7 @@ from FPTree import *
 import numpy as np  
 
 
-def get_head_point_table(data, support):
+def get_freq_courses(data, support):
     """
     input: 
         data(np.array): student to course.
@@ -16,52 +16,57 @@ def get_head_point_table(data, support):
         key: course index
         value: the number of students that enrolled this course.
     """
-    
-    hpt = {}
+    freq_courses = {}
     for col in range(0, data.shape[1]):
         column = data[:, col]
         count = len(column[column != 0])
         if count/data.shape[0] >= support:
-            hpt[col] = count
+            freq_courses[col] = count
 
-    sorted_hpt={}
-    for k,v in sorted(hpt.items(), key=lambda item: item[1], reverse=True):
-        sorted_hpt[k] = v
-    return sorted_hpt
-         
-def update_FPTree(fp_tree, record, course_indices):
+    sorted_courses={}
+    for k,v in sorted(freq_courses.items(), key=lambda item: item[1], reverse=True):
+        sorted_courses[k] = v
+    return sorted_courses
+        
+
+def get_sorted_records(data, sorted_courses):
+    """
+    input: 
+        data(np.array): student to course.
+            dtype: int64
+        sorted_cources(np.aray): sorted courses index from High to Low 
+            dtype: Int
+
+    Output:
+        student to course index about the freq cources.
+        from high to low
+    """
+    sorted_record = list()
+    for student in data:
+        freq_course_grades = student[sorted_courses]
+        #record the course index that student has grade
+        sorted_record.append(sorted_courses[freq_course_grades != 0])
+
+    return np.array(sorted_record)
+
+
+# def update_FPTree(fp_tree, records):
     
-    current_node = fp_tree.get_root()
-    # print(len(current_node.get_children()))
-    for index in course_indices:
+#     current_node = fp_tree.get_root()
+#     # print(len(current_node.get_children()))
+#     for course in records:
 
-        if record[index] != 0:
-
-            children = current_node.get_children()
-            
-            if index == 82 and current_node is fp_tree.get_root():
-                print(len(children))
-
-            # if the node has no children
-            if len(children) == 0:
-                new_node = FPTree.Node(index, 1, current_node)
-                current_node.add_child(new_node)
-                current_node = new_node
-                continue
-            
-            child = current_node.search_child(str(index))
+#         child = current_node.search_child(str(course))
+        
+#         if child:
+#             child.add_count()
+#         else:
+#             child = FPTree.Node(str(course), 1, current_node)
+#             current_node.add_child(child)
+    
+#         current_node = child
                 
-
-            if child in children:
-                child.add_count()
-                current_node = child
-             
-            else:
-                new_node = FPTree.Node(index, 1, current_node)
-                current_node.add_child(new_node)
-                current_node = new_node
-                    
-    return fp_tree
+#     return fp_tree
 
 
 def print_FPTree(fp_tree):
@@ -78,34 +83,24 @@ if __name__ == "__main__":
     data = Data("dataset/UQDataset_5_5639.csv")
     trainset = data.get_int_dataset(data.get_s2c_trainset())
   
-
-
     np.set_printoptions(linewidth=np.inf, threshold=np.inf)
 
-    hpt = get_head_point_table(trainset, 0.05)
-    course_indices = np.array(list(hpt.keys()))
-    print(course_indices)
-
-    index_trainset = trainset[:,course_indices]
-    # print(index_trainset[:,1])
-    print(len(index_trainset[index_trainset[:,0] != 0]))
-    print(len(index_trainset[(index_trainset[:,0] == 0) & \
-        (index_trainset[:,1] != 0)]))
-    print(len(index_trainset[(index_trainset[:,0] == 0) & \
-            (index_trainset[:,1] == 0) &\
-                index_trainset[:,2] != 0]))
- 
-    
-
-    # print(trainset[0][course_indices])
+    freq_cources = get_freq_courses(trainset, 0.05)
+    # get frequent course indices.
+    freq_indices = np.array(list(freq_cources.keys()))
+    # get frequent course indices that student has grade.
+    records = get_sorted_records(trainset, freq_indices)
 
     fp_tree = FPTree()
 
-    for record in trainset:
- 
-        fp_tree = update_FPTree(fp_tree,record,course_indices)
-       
-    # # print tree
-    current_node = fp_tree.get_root()
-    children = current_node.get_children()    
-    print(len(children))
+    # generate FP-Tree.
+
+    for record in records:
+        fp_tree.update_tree(record)
+    # # test
+    root = fp_tree.get_root()
+    # children = root.get_children()
+    # print(len(children))
+    
+    print(freq_indices)
+    fp_tree.print_tree("",root)

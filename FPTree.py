@@ -26,17 +26,21 @@ class FPTree:
             self.__count += 1
 
         def get_children(self):
+            """
+                return a list of children Node.
+            """
             return self.__children
         
         def get_all_children_name(self):
             return [child.get_node_name() for child in self.__children]
 
         def search_child(self, name):
+            
             for child in self.__children:
-                if child.get_node_name() == name:
+                if child.get_node_name() == str(name):
                     return child
-                else: 
-                    return None
+            
+            return None
 
         def get_node_name(self):
             return self.__node_name
@@ -53,5 +57,35 @@ class FPTree:
     def get_root(self):
         return self.__root
     
-  
+    def update_tree(self, record):
+
+        current_node = self.get_root()
+
+        for course in record:
+            
+            child = current_node.search_child(str(course))
+        
+            if child:
+                child.add_count()
+            else:
+                child = FPTree.Node(str(course), 1, current_node)
+                current_node.add_child(child)
+        
+            current_node = child
     
+
+    # def conditional_tree(self):
+
+
+    def print_tree(self, padding, node):
+        content = ">"+ str(node.get_node_name())
+        print(content, end="")
+        padding += " "*int(len(content)/2)
+        children = node.get_children()
+        if children:
+            for child in children:
+                # print("{0}|".format(padding),end="")
+                self.print_tree(padding, child)
+        else:
+            print("leaf")
+            print(padding+"|",end="")
