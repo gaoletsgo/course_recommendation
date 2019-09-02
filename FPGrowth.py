@@ -169,7 +169,7 @@ if __name__ == "__main__":
     
     freq_set = fp_tree.get_freq_item_set("52")
 
-   
+    
     
     for s in freq_set:
         print(s)

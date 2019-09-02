@@ -5,7 +5,7 @@ from functools import reduce
 from Data import *
 
 from FreqItemSet import *
-
+f=open("out.txt","w+")
 
 class Obj:
 
@@ -76,6 +76,8 @@ inter = s3&s1
 
 print(i3 in s2, hash(i3))
 for i in s2:
+        f.write(hash(i))
+        f.write("write")
         print(hash(i))
 
 i3.itemset = set(["qq"])
@@ -108,4 +110,6 @@ for s in s2:
 # print(s2,n2)
 # print(["1","2","3"] == ["1","2","3"])
 # print(itset.itemset == itset2.itemset)
+
+
 
