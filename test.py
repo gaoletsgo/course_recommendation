@@ -2,6 +2,7 @@ import numpy as np
 from FPTree import *
 import copy
 from functools import reduce
+from Data import *
 
 from FreqItemSet import *
 
@@ -61,6 +62,8 @@ itset2 = FreqItemSet(set(), 2)
 i3 = FreqItemSet(set(["1", "2","3"]), 3)
 
 fp = FPTree()
+
+data = Data("dataset/UQDataset_5_5639.csv")
 
 
 

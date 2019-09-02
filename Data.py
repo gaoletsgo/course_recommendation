@@ -5,7 +5,7 @@ class Data:
 
     def __init__(self, filepath):
         
-        self.__full_table = np.genfromtxt(filepath, dtype=None, delimiter=",", encoding=None)
+        self.__full_table = np.genfromtxt(filepath, dtype=None, delimiter=",",encoding=None)
     
     
     def get_courses(self):
