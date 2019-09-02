@@ -204,15 +204,15 @@ class FPTree:
         return self.__pointer_table
 
 
-    def print_tree(self, padding, node):
-        content = ">"+ str(node.get_node_name())
-        print(content, end="")
-        padding += " "*int(len(content)/2)
-        children = node.get_children()
-        if children:
-            for child in children:
-                # print("{0}|".format(padding),end="")
-                self.print_tree(padding, child)
-        else:
-            print("leaf")
-            print(padding+"|",end="")
+    # def print_tree(self, padding, node):
+    #     content = ">"+ str(node.get_node_name())
+    #     print(content, end="")
+    #     padding += " "*int(len(content)/2)
+    #     children = node.get_children()
+    #     if children:
+    #         for child in children:
+    #             # print("{0}|".format(padding),end="")
+    #             self.print_tree(padding, child)
+    #     else:
+    #         print("leaf")
+    #         # print(padding+"|",end="")
