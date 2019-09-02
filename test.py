@@ -5,7 +5,7 @@ from functools import reduce
 from Data import *
 
 from FreqItemSet import *
-f=open("out.txt","w+")
+f=open("result.txt","w+")
 
 class Obj:
 
@@ -76,7 +76,7 @@ inter = s3&s1
 
 print(i3 in s2, hash(i3))
 for i in s2:
-        f.write(hash(i))
+        f.write(str(hash(i))+"\n")
         f.write("write")
         print(hash(i))
 
