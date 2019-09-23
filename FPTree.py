@@ -76,6 +76,7 @@ class FPTree:
                 child = FPTree.Node(str(course), 1, current_node)
                 current_node.add_child(child)
 
+                # create head point table
                 name = child.get_node_name()
                 if name in self.__pointer_table.keys():
                     self.__pointer_table[name].append(child)
@@ -153,10 +154,8 @@ class FPTree:
         copy_set.remove(item)
         return itemset.difference(copy_set).pop()
 
-    def get_freq_item_set(self, course_index):
+    def get_freq_item_set(self, course_index, support, data_size):
         
-      
-
         course_nodes = self.__pointer_table[course_index]
 
         course_freq_set = set()
@@ -164,8 +163,12 @@ class FPTree:
         for node in course_nodes:
 
             count = node.get_count()
-            suffix = set([node.get_node_name()])
 
+            # remove the prefix that below the support
+            if count/data_size < support:
+                continue
+
+            suffix = set([node.get_node_name()])
             prefix = self.get_prefix(node)
 
             prefix_freq_set = self.get_prefix_freq_item_set(prefix,count)
@@ -176,12 +179,14 @@ class FPTree:
                 freq_with_suffix.add(pref_set)
                 
                 # print(pref_set) # to be deleted.
-            print("pref set: ",len(prefix_freq_set), "mainset: ",len(course_freq_set))
-            
+            # print("pref set: ",len(prefix_freq_set), "mainset: ",len(course_freq_set))
+         
+             # add suffix itself because it is a frequent set as well.
+            freq_with_suffix.add(FreqItemSet(suffix, count))
 
             # intersection in prefix freq itemset and main item set.
             intersection = freq_with_suffix & course_freq_set
-            print("inter", len(intersection))
+            # print("inter", len(intersection))
             # add the count in prefix freq set to the main freq item set.
             for item in intersection:
 
@@ -195,6 +200,15 @@ class FPTree:
 
         return course_freq_set
             
+    # def mining_assocaite_rules(self, freq_item_set):
+    #     """
+    #         Input: 
+    #             freq_item_set: Set(FreqItemSet)
+            
+    #         Output: 
+    #             Associate rules in a frequent item set.
+    #     """
+
 
 
 

@@ -101,12 +101,15 @@ def get_frequent_courses_set(fp_tree, course_indices):
 
 if __name__ == "__main__":
 
+    f=open("fp.txt", "w+")
+
+
     data = Data("dataset/UQDataset_5_5639.csv")
     trainset = data.get_int_dataset(data.get_s2c_trainset())
   
     np.set_printoptions(linewidth=np.inf, threshold=np.inf)
 
-    freq_cources = get_freq_courses(trainset, 0.01)
+    freq_cources = get_freq_courses(trainset, 0.05)
     # get frequent course indices.
     freq_indices = np.array(list(freq_cources.keys()))
     # get frequent course indices that student has grade.
@@ -161,15 +164,16 @@ if __name__ == "__main__":
     #     print(fp_tree._get_item_in_set(all_set, i))
 
 
-
  
 
-
-
     
-    freq_set = fp_tree.get_freq_item_set("52")
-
+    # Mining all frequent item set:
     
+    for course_index in freq_indices:
+        freq_set = fp_tree.get_freq_item_set(str(course_index),0.05,trainset.shape[1])
+        f.write(str(course_index)+" start : \n")
+        print(course_index)
+        for s in freq_set:
+            f.write(str(s)+"\n")
     
-    for s in freq_set:
-        print(s)
+    print("end")
