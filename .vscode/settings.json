@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "/usr/local/opt/python/bin/python3.7",
+    "python.pythonPath": "D:\\anaconda\\envs\\pyenv\\python.exe",
     // "code-runner.executorMap.python": "python3 -u" 
 }
