@@ -32,6 +32,8 @@ import numpy as np
 
 data = Data("dataset/UQDataset_5_5639_m.csv")
 c2s = data.get_int_dataset(data.get_all_course2student())
+
+
 s2c = data.get_int_dataset(data.get_all_student2course())
 # full_table = pd.DataFrame(data.get_fulltable())
 
